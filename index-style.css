@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,400;0,600;0,900;1,100;1,400;1,600;1,900&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Styles for the header only start here */
+
+header{
+    background-color: rgb(41, 43, 44);
+}
+
+#clock{
+    font-weight: 400;
+    width: 200px;
+    text-align: center; 
+}
+
+/* Styles for the header only end here */
+
+/* styles for the body start here */
+.main {
+    display: flex;
+}
+
+.main-title {
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.content{
+    width: 100vw;
+    height: 86vh;
+    background: white;
+    margin: 0px 0px;
+}
+
+.sidebar{
+    background-color:lightgrey;
+    width: 0vw;
+    height: auto;
+    font-size: 1.5rem;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar > ul {
+    padding: 0px;
+} 
+
+.sidebar > ul > li{
+    margin: 15px 0px;
+    list-style: none;
+}
+
+.sidebar > ul > li > a {
+    text-decoration: none;
+    color: black;
+} 
+
+/* Styles for Counterstate start */
+#counterState > h1 {
+    text-align: center;
+    font-weight: 900;
+}
+
+.counterline{
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 10px 10px 10px;
+    padding: 5px;
+    background-color: rgb(236, 236, 236);
+}
+
+.inputdiv{
+    display: flex;
+    align-items: center;
+}
+
+.nameinput {
+    width: 600px;
+    font-size: 1.5rem;
+    padding-left: 10px;
+}
+
+.counterdiv {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 1.5rem;
+}
+
+#counter {
+    padding: 0px 10px 0px 10px;    
+    margin: 0px 10px 0px 10px;    
+}
+
+
+
+.startbutton {
+    font-size: 1.5rem;
+    padding: 5px;
+    width: 200px;
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    margin-left: 20px;
+}
+
+.stopbutton {
+    font-size: 1.5rem;
+    padding: 5px;
+    width: 200px;
+    background-color: #D90909;
+    color: white;
+    border: none;
+    margin-left: 20px;
+}
+
+.table {
+    background-color: white;
+    width: auto;
+    margin: 10px;
+    height: max-content;
+}
+
+.table > div > div {
+    border-bottom: 1px solid black;
+    margin: 1px;
+}
+
+.project-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.totalSpan {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.valueSpan {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+/* Styles for Counterstate end */
+
+/* Styles for calendarstate start */
+
+.calendarState {
+    margin: 0px 10px 10px 10px;
+}
+
+.calendarState > h1 {
+    text-align: center;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.calendar-table {
+    height: max-content;
+    /* border: 1px solid black; */
+    font-size: 1.5rem;
+}
+.week {
+    /* background: green; */
+    /* order: 1px solid blue; */
+    display: flex;
+    justify-content:space-evenly; 
+}
+
+.day {
+    /*background: red; */
+    border: 1px solid black;
+    width: 14.2%;
+    height: 57px;
+    margin: 1px; 
+    padding: 0px auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.month {
+    margin: 1px 1px;
+    font-weight: 600;
+}
+
+.month-total {
+    margin: 1px 1px;
+    font-weight: 600;
+}
+/* Styles for calendarstate end */
+
+
+
+/* Styles for Projectstate start */
+.projectState {
+    margin: 0px 10px 10px 10px;
+}
+
+.projectState > h1{
+    text-align: center;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.project-table {
+    height: max-content;
+}
+
+.project-table > div:nth-of-type(odd){
+    background: rgb(236, 236, 236);
+} 
+
+
+.line-div{
+    border-bottom: 1px solid black;
+    padding: 9px;
+    margin: 1px;
+}
+
+.line-title-span{
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.line-count-span{
+    font-size: 1.5rem;
+
+}
+/* Styles for Project state end */
+
+
+
+
+/* styles for footer only */
+footer{
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding-right: 15px;
+}
+
+/* styles for the body end here */
+
+
+
+
+
