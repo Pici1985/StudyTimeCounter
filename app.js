@@ -1,62 +1,76 @@
-// easyHTTP library starts here
+// App init
+(function appInit(){
+    renderLine();
+    getProjects();    
+})();
 
-class EasyHTTP {
-    // Make an HTTP GET Request 
-    async get(url) {
-      const response = await fetch(url);
-      const resData = await response.json();
-      return resData;
-    }
-  
-    // Make an HTTP POST Request
-    async post(url, data) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
+//Storage controller starts
+//Storage controller starts
+//Storage controller starts
+
+const StorageCtrl = (function(){
+    // public methods
+    return {
+        storeItem: function(item){
+            let items;
+            
+            // check if any items in localstorage
+            if(localStorage.getItem('items') === null){
+            items = [];
+            
+            //push new item
+            items.push(item);
+            
+            // set localstorage
+            localStorage.setItem('items', JSON.stringify(items));
+        }else{
+            // gat data that is already in localstorage 
+            items = JSON.parse(localStorage.getItem('items')); 
+            
+            // push new item
+            items.push(item);
+            
+            // reset localstorage
+            localStorage.setItem('items', JSON.stringify(items));   
+        }   
         },
-        body: JSON.stringify(data)
-      });
-  
-      const resData = await response.json();
-      return resData;
-    }
-  
-     // Make an HTTP PUT Request
-     async put(url, data) {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json'
+        getItemsFromStorage: function(){
+            let items;
+            if(localStorage.getItem('items') === null){
+                items = [];
+            } else {
+                items = JSON.parse(localStorage.getItem('items'));
+            }
+            return items;    
         },
-        body: JSON.stringify(data)
-      });
-      
-      const resData = await response.json();
-      return resData;
-    }
-  
-    // Make an HTTP DELETE Request
-    async delete(url) {
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json'
+        updateItemStorage: function(updatedItem){
+            let items = JSON.parse(localStorage.getItem('items'));
+            items.forEach(function(item, index){
+                if(updatedItem.id === item.id){
+                    items.splice(index, 1, updatedItem)
+                }
+            });
+            localStorage.setItem('items', JSON.stringify(items));     
+        },
+        deleteItemFromStorage: function(id){
+            let items = JSON.parse(localStorage.getItem('items'));
+            items.forEach(function(item, index){
+                if(id === item.id){
+                    items.splice(index, 1);
+                }
+            });
+            localStorage.setItem('items', JSON.stringify(items));       
+        },
+        clearItemsFromStorage: function(){
+            localStorage.removeItem('items');    
         }
-      });
-  
-      const resData = await 'Resource Deleted...';
-      return resData;
     }
-  
-   }
-
-const http = new EasyHTTP();
-
-// easyHTTP library ends here
+})();
+//Storage controller ends
+//Storage controller ends
+//Storage controller ends
 
 // Clock Component Start
-
 function currentTime() {
     let date = new Date(); 
     let hour = date.getHours();
@@ -83,7 +97,6 @@ function updateTime(k) {
 };
 
 currentTime(); 
-
 // Clock component ends
 
 //sidebar control starts 
@@ -120,16 +133,22 @@ document.getElementById('todaysDate').textContent = `${now}`;
 //date ends here
 
 
+
 // GLOBAL VARIABLES start 
+// GLOBAL VARIABLES start 
+
 var counter = document.getElementById('counter'),
 seconds = 0, minutes = 0, hours = 0,
 t;
 // Global variables for data
-let nameInput;
-let count;
+/* let nameInput;
+let count; */
 // global variable for local counter
 let localT;
+
 // GLOBAL VARIABLES end 
+// GLOBAL VARIABLES end 
+
 
 
 //GLOBAL ADD FUNCTION
@@ -173,26 +192,44 @@ function stop(){
     (function clear(){
         clearTimeout(t);
     })(); 
-    // this gets the from fields befor clearing them
-    dataCollector();
-    //clears data from fields
-    let nameinput = document.getElementById('nameinput');
+
+    // stores data to localstorage
+    storeData(dataCollector());
+
     nameinput.value = "";
     counter.textContent = "00:00:00";
-    seconds = 0; minutes = 0; hours = 0;
-    // renders the line to DOM
-    renderLine(nameInput, count);  
-}
+    seconds = 0; 
+    minutes = 0; 
+    hours = 0;
 
-// clear input field
-function clearInputField(){
-    document.getElementById('nameinput').value = "";
+    //renders data from localstorage
+    renderLine();
+    getProjects(); 
 }
 
 // collects data from counter 
 function dataCollector(){
-    nameInput = document.getElementById('nameinput').value;
-    count = document.getElementById('counter').innerHTML;    
+    let nameInput = document.getElementById('nameinput');
+    let count = document.getElementById('counter').innerHTML;
+    date = now;
+    let id; 
+    if(localStorage.getItem('projects') === null){
+        id = 0;
+    } else {
+        id = JSON.parse(localStorage.getItem('projects')).length;
+    };
+
+    console.log(nameInput.value);
+
+    project = {
+        name : nameInput.value,
+        total : count,
+        date : date,
+        id : id
+    }
+
+    // console.log(project);
+    return project;    
 };
 
 // gets the id of each new line
@@ -202,74 +239,68 @@ function IDgetter(){
 }
 
 // renders a new line to th DOM
-function renderLine(nameInput, count){
+function renderLine(){    
+    let tableline = document.getElementById('table-line').innerHTML = "";
     // console.log(nameInput, count);
-    let tableline = document.getElementById('table-line');
-    // gets the id for the actual line
-    let id = IDgetter();
-    // creating element for the new line
-    let line = document.createElement('div');
-    // add class
-    line.classList.add("d-flex", "justify-content-between", "align-items-center");
-    // add id
-    line.setAttribute('id', id);
-    // append to element
-    tableline.appendChild(line);
-    // set html to element
-    line.innerHTML = 
-    `<div class="project-title">
-      <span>${nameInput}</span>  
-    </div>
-    <div class="project-total d-flex justify-content-between align-items-center">
-      <span class="totalSpan"> Total: </span>
-      <span class="valueSpan" id="valueSpan-${id}">${count}</span>
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${id})" class="m-1">
-        <rect width="30" height="30" fill="#E5E5E5"/>
-        <rect width="30" height="30" fill="#006400"/>
-        <path d="M24 15L9 23.6603L9 6.33975L24 15Z" fill="white"/>
-      </svg>
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${id});" class="m-1">
-        <rect width="30" height="30" fill="#D90909"/>
-        <rect x="7" y="7" width="16" height="16" fill="white"/>
-      </svg>
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="deleteLine(${id})" class="m-1">
-        <rect width="30" height="30" fill="#E5E5E5"/>
-        <rect width="30" height="30" fill="#000"/>
-        <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
-        <rect x="5" y="22.6777" width="25" height="3" transform="rotate(-45 5 22.6777)" fill="white"/>
-      </svg>
-    </div>`;
-         
-    };
+    let projects = localStorage.getItem('projects');
+    let projectsArr = JSON.parse(projects);
 
-// delete any rendered line
-function deleteLine(id){
+    for(project of projectsArr){
+        // console.log(project);
+        tableline = document.getElementById('table-line');
+        // gets the id for the actual line
+        // let id = IDgetter();
+        // creating element for the new line
+        let line = document.createElement('div');
+        // add class
+        line.classList.add("d-flex", "justify-content-between", "align-items-center");
+        // add id
+        line.setAttribute('id', project.id);
+        // append to element
+        tableline.appendChild(line);
+        // set html to element
+        line.innerHTML = 
+        `<div class="project-title">
+        <span>${project.name}</span>  
+        </div>
+        <div class="project-total d-flex justify-content-between align-items-center">
+            <span class="totalSpan"> Total: </span>
+            <span class="valueSpan" id="valueSpan-${project.id}">${project.total}</span>
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${project.id})" class="m-1">
+                <rect width="30" height="30" fill="#E5E5E5"/>
+                <rect width="30" height="30" fill="#006400"/>
+            <path d="M24 15L9 23.6603L9 6.33975L24 15Z" fill="white"/>
+            </svg>
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${project.id});" class="m-1">
+                <rect width="30" height="30" fill="#D90909"/>
+                <rect x="7" y="7" width="16" height="16" fill="white"/>
+            </svg>
+        </div>`;    
+        }        
+    }; 
+
+    // ez az app initnel kell 
+    
+    // delete any rendered line
+    /* function deleteLine(id){
     document.getElementById(id).remove();
-}
+} */
 
 // start local counter
 
 function initLocalCounter(id){
     // create variables 
     let localCounter = document.getElementById('valueSpan-' + id);
-    let localSeconds = 0; 
-    let localMinutes = 0;  
-    let localHours = 0;
     
     // getting starting value from valuespan field and turning them to numbers
-    let hr = parseInt(localCounter.textContent.slice(0,2));
-    let min = parseInt(localCounter.textContent.slice(3,5));
-    let sec = parseInt(localCounter.textContent.slice(6,8));
-
+    let localHours = parseInt(localCounter.textContent.slice(0,2));
+    let localMinutes = parseInt(localCounter.textContent.slice(3,5));
+    let localSeconds = parseInt(localCounter.textContent.slice(6,8));
+    
     /* console.log(hr);
     console.log(min); // ebbo lehet valami csak egyjegyu szamok kellenek
     console.log(sec); */
-
-    //setting variables to starting values 
-    localSeconds = sec;
-    localMinutes = min;
-    localHours = hr;
-
+    
     // function to do the count, increments each second  
     function localAdd() {
         localSeconds++;
@@ -281,19 +312,20 @@ function initLocalCounter(id){
                 localHours++;
             }
         }
-    
-    // setting textcontent    
-    localCounter.textContent = (localHours ? (localHours > 9 ? localHours : "0" + localHours) : "00") + ":" + (localMinutes ? (localMinutes > 9 ? localMinutes : "0" + localMinutes) : "00") + ":" + (localSeconds > 9 ? localSeconds : "0" + localSeconds);
-    
-    // starting the timer
-    localTimer();
+        
+        // setting textcontent    
+        localCounter.textContent = (localHours ? (localHours > 9 ? localHours : "0" + localHours) : "00") + ":" + (localMinutes ? (localMinutes > 9 ? localMinutes : "0" + localMinutes) : "00") + ":" + (localSeconds > 9 ? localSeconds : "0" + localSeconds);
+        
+        // starting the timer
+        localTimer();
     }
-
+    
     // setting the timeout calls localAdd function once a second 
     function localTimer() {
         localT = setTimeout(localAdd, 1000);
+        console.log(localT);
     }
-
+    
     // starting the timer
     localTimer();
 }
@@ -310,7 +342,19 @@ function stopCount(id){
     (function clear(){
         clearTimeout(localT);
     })();
-    sendDataToDb();   
+    // ez a stoppgomb kiveszi az adatot a storagebol updateli az uj ertekkel es visszateszi es hivaj a renderlinet   
+    let newCount = document.getElementById(`valueSpan-${id}`).innerHTML;
+    let projects = JSON.parse(localStorage.getItem('projects'));
+
+    projects[id].total = newCount;
+
+    console.log(newCount);
+    console.log(projects[id]);
+
+    localStorage.setItem('projects', JSON.stringify(projects));
+
+    renderLine();
+    getProjects();    
 }
 
 // statecontrols 
@@ -325,8 +369,7 @@ function showProjectState(){
     console.log('projectstate');
     document.getElementById('counterState').style.display = 'none';
     document.getElementById('calendarState').style.display = 'none';
-    document.getElementById('projectState').style.display = 'block';
-    // getProjects();   
+    document.getElementById('projectState').style.display = 'block';   
 }
 
 function showcalendarState(){
@@ -339,74 +382,67 @@ function showcalendarState(){
 // data functions start here
 
 function getProjects(){
-    let projectTable = document.getElementById('project-table');
-    if(projectTable.children.length === 0){
-        // console.log("no children")
-        fetch('http://localhost:3000/projects')
-        .then(response => response.json())
-        .then(data => data.forEach(function(line){
-            projectTable = document.getElementById('project-table');  
-            // console.log(line.id, line.title, line.count);
-            lineDiv = document.createElement('div');
-            lineDiv.innerHTML = `
-            <span class="line-title-span">${line.title}</span>
-            <div class="d-flex align-center">    
-                <span class="line-count-span">${line.count}</span>
-                <div id="deleteButton" onClick="deleteLineFromData(${line.id});">
-                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-1" >
-                        <rect width="30" height="30" fill="#E5E5E5"/>
-                        <rect width="30" height="30" fill="#000"/>
-                        <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
-                        <rect x="5" y="22.6777" width="25" height="3" transform="rotate(-45 5 22.6777)" fill="white"/>
-                    </svg>
-                </div>
-            </div>`;
-            lineDiv.classList.add('d-flex','justify-content-between','line-div'); 
-            projectTable.appendChild(lineDiv);
-        }));   
+    let projectTable = document.getElementById('project-table').innerHTML = "";
+
+    let projects = JSON.parse(localStorage.getItem('projects'));
+    // console.log(projects);
+
+    projectTable = document.getElementById('project-table');  
+    
+    for(project of projects){
+        lineDiv = document.createElement('div');
+        lineDiv.innerHTML = `
+        <span class="line-title-span">${project.name}</span>
+        <div class="d-flex align-center">    
+            <span class="line-count-span">${project.total}</span>
+            <div id="deleteButton-${project.id}">
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-1" onClick='deleteLine(${project.id})'>
+                    <rect width="30" height="30" fill="#E5E5E5"/>
+                    <rect width="30" height="30" fill="#000"/>
+                    <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
+                    <rect x="5" y="22.6777" width="25" height="3" transform="rotate(-45 5 22.6777)" fill="white"/>
+                </svg>
+            </div>
+        </div>`;
+        lineDiv.classList.add('d-flex','justify-content-between','line-div'); 
+        projectTable.appendChild(lineDiv);
+    }
+
+};   
+
+function deleteLine(id){    
+    let projects = JSON.parse(localStorage.getItem('projects'));
+    projects.splice(id);
+    console.log(projects);
+    localStorage.setItem('projects',JSON.stringify(projects));
+    renderLine();
+    getProjects(); 
+    // ide kell egy delete request
+}
+
+function storeData(project){
+    let projects;
+    
+    // check if any items in localstorage
+    if(localStorage.getItem('projects') === null){
+        projects = [];
+        
+        //push new item
+        projects.push(project);
+        
+        // set localstorage
+        localStorage.setItem('projects', JSON.stringify(projects));
+    } else {
+        projects = JSON.parse(localStorage.getItem('projects')); 
+        
+        // push new item
+        projects.push(project);
+        
+        // reset localstorage
+        localStorage.setItem('projects', JSON.stringify(projects));      
     }
 }
 
-
-
-
-// ez az egesz egy nagy kerdojel innen
-// ez az egesz egy nagy kerdojel innen
-// ez az egesz egy nagy kerdojel innen
-
-getProjects();
-
-// ez itt nem jo innen
-
-function sendDataToDb(){
-    data = {
-        title : nameInput,
-        count : count,
-        date : now
-    }
-    console.log(data, now);
-    http.post('http://localhost:3000/projects', data);   
-};
-
-function deleteLineFromData(id){    
-    console.log('delete from database ' + id); 
-    // ide kell egy delete request
-    http.delete(`http://localhost:3000/projects/${id}`);
-}  
-
-// ez itt nem jo idaig
-
-
-
-/* function initListeners(){
-    console.log('init');
-    document.getElementById('deleteButton').addEventListener('click', function(e){
-        console.log('delete from database ' + id);    
-        http.delete(`http://localhost:3000/projects/${id}`);
-        e.preventDefault();
-    });
-}  */
-
-// data functions end here
+// ez lehet meg kell data-id="${project.id}"
 
 
