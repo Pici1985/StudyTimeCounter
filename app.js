@@ -326,17 +326,22 @@ function getProjects(){
 };   
 
 // deletebutton functionality 
-function deleteLine(id){  
-    // gets data from localstorage  
-    let projects = JSON.parse(localStorage.getItem('projects'));
-    // deletes given data
-    projects.splice(id);
-    // saves data with updated value
-    localStorage.setItem('projects',JSON.stringify(projects));
-    //renders the lines on the tracker state
-    renderLine();
-    //renders the lines on the project state
-    getProjects(); 
+function deleteLine(id){
+    if(ticking === true){
+        showDeleteAlert();
+        setTimeout(hideDeleteAlert, 3000);
+    } else {
+        // gets data from localstorage  
+        let projects = JSON.parse(localStorage.getItem('projects'));
+        // deletes given data
+        projects.splice(id);
+        // saves data with updated value
+        localStorage.setItem('projects',JSON.stringify(projects));
+        //renders the lines on the tracker state
+        renderLine();
+        //renders the lines on the project state
+        getProjects(); 
+    } 
 }
 
 // stores new data to storage
@@ -371,6 +376,14 @@ function showAlert(){
 
 function hideAlert(){
     document.getElementById('alert').style.display = 'none';   
+}
+
+function showDeleteAlert(){
+    document.getElementById('delete-alert').style.display = 'block';
+}
+
+function hideDeleteAlert(){
+    document.getElementById('delete-alert').style.display = 'none';   
 }
 
 
