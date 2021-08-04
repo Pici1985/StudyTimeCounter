@@ -58,6 +58,7 @@ header{
 
 .sidebar > ul > li{
     margin: 15px 0px;
+    padding: 2px 10px;
     list-style: none;
 }
 
