@@ -4,73 +4,19 @@
     getProjects();    
 })();
 
-//Storage controller starts
-//Storage controller starts
-//Storage controller starts
+// declaring GLOBAL VARIABLES start  
 
-const StorageCtrl = (function(){
-    // public methods
-    return {
-        storeItem: function(item){
-            let items;
-            
-            // check if any items in localstorage
-            if(localStorage.getItem('items') === null){
-            items = [];
-            
-            //push new item
-            items.push(item);
-            
-            // set localstorage
-            localStorage.setItem('items', JSON.stringify(items));
-        }else{
-            // gat data that is already in localstorage 
-            items = JSON.parse(localStorage.getItem('items')); 
-            
-            // push new item
-            items.push(item);
-            
-            // reset localstorage
-            localStorage.setItem('items', JSON.stringify(items));   
-        }   
-        },
-        getItemsFromStorage: function(){
-            let items;
-            if(localStorage.getItem('items') === null){
-                items = [];
-            } else {
-                items = JSON.parse(localStorage.getItem('items'));
-            }
-            return items;    
-        },
-        updateItemStorage: function(updatedItem){
-            let items = JSON.parse(localStorage.getItem('items'));
-            items.forEach(function(item, index){
-                if(updatedItem.id === item.id){
-                    items.splice(index, 1, updatedItem)
-                }
-            });
-            localStorage.setItem('items', JSON.stringify(items));     
-        },
-        deleteItemFromStorage: function(id){
-            let items = JSON.parse(localStorage.getItem('items'));
-            items.forEach(function(item, index){
-                if(id === item.id){
-                    items.splice(index, 1);
-                }
-            });
-            localStorage.setItem('items', JSON.stringify(items));       
-        },
-        clearItemsFromStorage: function(){
-            localStorage.removeItem('items');    
-        }
-    }
-})();
-//Storage controller ends
-//Storage controller ends
-//Storage controller ends
+var counter = document.getElementById('counter'),
+seconds = 0, minutes = 0, hours = 0,
+t;
+let localT;
+let ticking = false;
+let now; 
 
-// Clock Component Start
+// GLOBAL VARIABLES end 
+
+
+// Clock Component Starts
 function currentTime() {
     let date = new Date(); 
     let hour = date.getHours();
@@ -83,8 +29,7 @@ function currentTime() {
 
     document.getElementById("clock").innerHTML = hour + " : " + min + " : " + sec; 
 
-    setTimeout(function(){ currentTime() }, 1000); 
-    
+    setTimeout(function(){ currentTime() }, 1000);  
 }
 
 function updateTime(k) {
@@ -99,19 +44,20 @@ function updateTime(k) {
 currentTime(); 
 // Clock component ends
 
+
 //sidebar control starts 
+
 // opens/closes the sidemenu
 function openSlideMenu(){
     const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
 
     if(sidebar.style.width === '0vw'){
-        console.log('nyitva');
+        console.log('open');
         document.getElementById('hamburger').style.display = 'none';
         document.getElementById('xbutton').style.display = 'block';
         sidebar.style.width = '10vw';
     } else {
-        console.log('csukva');
+        console.log('closed');
         document.getElementById('hamburger').style.display = 'block';
         document.getElementById('xbutton').style.display = 'none';        
         sidebar.style.width = '0vw';
@@ -119,7 +65,8 @@ function openSlideMenu(){
 }
 // sidebar control ends
 
-//date starts here
+//date controller starts here
+
 //getting date and rendering it to the DOM
 let date = new Date();
 let today = {
@@ -127,28 +74,9 @@ let today = {
     month: date.getMonth() + 1,
     day: date.getDate()
 }
-let now; 
 now = (today.day.toString() +"/" + today.month.toString() +"/"+ today.year.toString())
 document.getElementById('todaysDate').textContent = `${now}`;
-//date ends here
-
-
-
-// GLOBAL VARIABLES start 
-// GLOBAL VARIABLES start 
-
-var counter = document.getElementById('counter'),
-seconds = 0, minutes = 0, hours = 0,
-t;
-// Global variables for data
-/* let nameInput;
-let count; */
-// global variable for local counter
-let localT;
-
-// GLOBAL VARIABLES end 
-// GLOBAL VARIABLES end 
-
+//date controller ends here
 
 
 //GLOBAL ADD FUNCTION
@@ -181,7 +109,6 @@ function start(){
     timer();
 }
 
-
 // MAIN STOP BUTTON 
 function stop(){
     console.log('stopped');
@@ -212,15 +139,15 @@ function dataCollector(){
     let nameInput = document.getElementById('nameinput');
     let count = document.getElementById('counter').innerHTML;
     date = now;
-    let id; 
+    let id;
+    // check if projects exist in localstorage 
     if(localStorage.getItem('projects') === null){
         id = 0;
     } else {
         id = JSON.parse(localStorage.getItem('projects')).length;
     };
 
-    console.log(nameInput.value);
-
+    // create project object
     project = {
         name : nameInput.value,
         total : count,
@@ -228,28 +155,17 @@ function dataCollector(){
         id : id
     }
 
-    // console.log(project);
     return project;    
 };
-
-// gets the id of each new line
-function IDgetter(){
-    let nrofIDS = document.getElementById('table-line').childElementCount;
-    return nrofIDS;
-}
 
 // renders a new line to th DOM
 function renderLine(){    
     let tableline = document.getElementById('table-line').innerHTML = "";
-    // console.log(nameInput, count);
     let projects = localStorage.getItem('projects');
     let projectsArr = JSON.parse(projects);
 
     for(project of projectsArr){
-        // console.log(project);
         tableline = document.getElementById('table-line');
-        // gets the id for the actual line
-        // let id = IDgetter();
         // creating element for the new line
         let line = document.createElement('div');
         // add class
@@ -266,25 +182,18 @@ function renderLine(){
         <div class="project-total d-flex justify-content-between align-items-center">
             <span class="totalSpan"> Total: </span>
             <span class="valueSpan" id="valueSpan-${project.id}">${project.total}</span>
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${project.id})" class="m-1">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${project.id})" class="button m-1">
                 <rect width="30" height="30" fill="#E5E5E5"/>
                 <rect width="30" height="30" fill="#006400"/>
             <path d="M24 15L9 23.6603L9 6.33975L24 15Z" fill="white"/>
             </svg>
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${project.id});" class="m-1">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${project.id});" class="button m-1">
                 <rect width="30" height="30" fill="#D90909"/>
                 <rect x="7" y="7" width="16" height="16" fill="white"/>
             </svg>
         </div>`;    
         }        
     }; 
-
-    // ez az app initnel kell 
-    
-    // delete any rendered line
-    /* function deleteLine(id){
-    document.getElementById(id).remove();
-} */
 
 // start local counter
 
@@ -296,11 +205,7 @@ function initLocalCounter(id){
     let localHours = parseInt(localCounter.textContent.slice(0,2));
     let localMinutes = parseInt(localCounter.textContent.slice(3,5));
     let localSeconds = parseInt(localCounter.textContent.slice(6,8));
-    
-    /* console.log(hr);
-    console.log(min); // ebbo lehet valami csak egyjegyu szamok kellenek
-    console.log(sec); */
-    
+        
     // function to do the count, increments each second  
     function localAdd() {
         localSeconds++;
@@ -323,7 +228,6 @@ function initLocalCounter(id){
     // setting the timeout calls localAdd function once a second 
     function localTimer() {
         localT = setTimeout(localAdd, 1000);
-        console.log(localT);
     }
     
     // starting the timer
@@ -332,9 +236,17 @@ function initLocalCounter(id){
 
 // starts the counter on the line with the passed in ID
 function startCount(id){
-    console.log('started on -', id); 
-    initLocalCounter(id);
+    console.log('started on -', id);
+    // checks is a counter is already running 
+    if(ticking === false){
+        initLocalCounter(id);
+    } else {
+        showAlert();
+    }
+    setTimeout(hideAlert, 4000);  
+    ticking = true;
 }
+
 
 // stops the counter on the line with the passed in ID
 function stopCount(id){
@@ -342,38 +254,39 @@ function stopCount(id){
     (function clear(){
         clearTimeout(localT);
     })();
-    // ez a stoppgomb kiveszi az adatot a storagebol updateli az uj ertekkel es visszateszi es hivaj a renderlinet   
+    // ez a stoppgomb kiveszi az adatot a storagebol updateli az uj ertekkel es visszateszi es hivja a renderlinet   
     let newCount = document.getElementById(`valueSpan-${id}`).innerHTML;
     let projects = JSON.parse(localStorage.getItem('projects'));
 
     projects[id].total = newCount;
 
-    console.log(newCount);
+    // this the data that we just modified
     console.log(projects[id]);
 
+    // saves updated data to localstorage
     localStorage.setItem('projects', JSON.stringify(projects));
 
+    //renders the lines on the tracker state
     renderLine();
-    getProjects();    
+    //renders the lines on the project state
+    getProjects();
+    ticking = false;    
 }
 
 // statecontrols 
 
 function showCounterState(){
-    console.log('counterstate');
     document.getElementById('counterState').style.display = 'block';
     document.getElementById('calendarState').style.display = 'none';
     document.getElementById('projectState').style.display = 'none';
 }
 function showProjectState(){
-    console.log('projectstate');
     document.getElementById('counterState').style.display = 'none';
     document.getElementById('calendarState').style.display = 'none';
     document.getElementById('projectState').style.display = 'block';   
 }
 
 function showcalendarState(){
-    console.log('calendarstate');
     document.getElementById('counterState').style.display = 'none';
     document.getElementById('calendarState').style.display = 'block';
     document.getElementById('projectState').style.display = 'none';
@@ -382,13 +295,14 @@ function showcalendarState(){
 // data functions start here
 
 function getProjects(){
+    //clears project-table`s html
     let projectTable = document.getElementById('project-table').innerHTML = "";
-
+    // gets data from localstorage
     let projects = JSON.parse(localStorage.getItem('projects'));
-    // console.log(projects);
 
     projectTable = document.getElementById('project-table');  
     
+    //creates html elementfor each project in the projects array
     for(project of projects){
         lineDiv = document.createElement('div');
         lineDiv.innerHTML = `
@@ -396,7 +310,7 @@ function getProjects(){
         <div class="d-flex align-center">    
             <span class="line-count-span">${project.total}</span>
             <div id="deleteButton-${project.id}">
-                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="m-1" onClick='deleteLine(${project.id})'>
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="button m-1" onClick='deleteLine(${project.id})'>
                     <rect width="30" height="30" fill="#E5E5E5"/>
                     <rect width="30" height="30" fill="#000"/>
                     <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
@@ -404,22 +318,28 @@ function getProjects(){
                 </svg>
             </div>
         </div>`;
-        lineDiv.classList.add('d-flex','justify-content-between','line-div'); 
+        // adds classes to created lines
+        lineDiv.classList.add('d-flex','justify-content-between','line-div');
+        // appends to the div 
         projectTable.appendChild(lineDiv);
     }
-
 };   
 
-function deleteLine(id){    
+// deletebutton functionality 
+function deleteLine(id){  
+    // gets data from localstorage  
     let projects = JSON.parse(localStorage.getItem('projects'));
+    // deletes given data
     projects.splice(id);
-    console.log(projects);
+    // saves data with updated value
     localStorage.setItem('projects',JSON.stringify(projects));
+    //renders the lines on the tracker state
     renderLine();
+    //renders the lines on the project state
     getProjects(); 
-    // ide kell egy delete request
 }
 
+// stores new data to storage
 function storeData(project){
     let projects;
     
@@ -443,6 +363,14 @@ function storeData(project){
     }
 }
 
-// ez lehet meg kell data-id="${project.id}"
+// alert controller functions
+
+function showAlert(){
+    document.getElementById('alert').style.display = 'block';
+}
+
+function hideAlert(){
+    document.getElementById('alert').style.display = 'none';   
+}
 
 

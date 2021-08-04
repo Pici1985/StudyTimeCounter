@@ -43,7 +43,7 @@ header{
 }
 
 .sidebar{
-    background-color:lightgrey;
+    background-color:rgb(236, 236, 236);
     width: 0vw;
     height: auto;
     font-size: 1.5rem;
@@ -67,6 +67,7 @@ header{
 } 
 
 /* Styles for Counterstate start */
+
 #counterState > h1 {
     text-align: center;
     font-weight: 900;
@@ -123,6 +124,26 @@ header{
     color: white;
     border: none;
     margin-left: 20px;
+}
+
+.button:hover {
+    box-shadow: 0 10px 10px -6px grey;
+    filter: brightness(125%);
+}
+
+.wrp {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.alert-field {
+    color: Red;
+    margin: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
+    width: fit-content;
 }
 
 .table {
