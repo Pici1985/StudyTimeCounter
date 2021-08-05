@@ -23,6 +23,10 @@ header{
     text-align: center; 
 }
 
+a {
+    text-decoration: none;
+}
+
 /* Styles for the header only end here */
 
 /* styles for the body start here */
@@ -273,6 +277,10 @@ footer{
     align-items: center;
     height: 40px;
     padding-right: 15px;
+}
+
+.svg-button:hover {
+    fill: green;
 }
 
 /* styles for the body end here */
