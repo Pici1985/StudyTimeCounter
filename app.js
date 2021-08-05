@@ -3,9 +3,9 @@
     renderLine();
     getProjects();    
 })();
-
-// declaring GLOBAL VARIABLES start  
-
+    
+    // declaring GLOBAL VARIABLES start  
+    
 var counter = document.getElementById('counter'),
 seconds = 0, minutes = 0, hours = 0,
 t;
@@ -22,23 +22,23 @@ function currentTime() {
     let hour = date.getHours();
     let min = date.getMinutes();
     let sec = date.getSeconds();
-
+    
     hour = updateTime(hour);
     min = updateTime(min);
     sec = updateTime(sec);
-
+    
     document.getElementById("clock").innerHTML = hour + " : " + min + " : " + sec; 
-
+    
     setTimeout(function(){ currentTime() }, 1000);  
 }
-
+    
 function updateTime(k) {
     if (k < 10) {
-      return "0" + k;
-    }
-    else {
-      return k;
-    }
+        return "0" + k;
+}
+else {
+    return k;
+}
 };
 
 currentTime(); 
@@ -50,12 +50,12 @@ currentTime();
 // opens/closes the sidemenu
 function openSlideMenu(){
     const sidebar = document.getElementById('sidebar');
-
+    
     if(sidebar.style.width === '0vw'){
         console.log('open');
         document.getElementById('hamburger').style.display = 'none';
         document.getElementById('xbutton').style.display = 'block';
-        sidebar.style.width = '10vw';
+        sidebar.style.width = '13vw';
     } else {
         console.log('closed');
         document.getElementById('hamburger').style.display = 'block';
@@ -119,16 +119,16 @@ function stop(){
     (function clear(){
         clearTimeout(t);
     })(); 
-
+    
     // stores data to localstorage
     storeData(dataCollector());
-
+    
     nameinput.value = "";
     counter.textContent = "00:00:00";
     seconds = 0; 
     minutes = 0; 
     hours = 0;
-
+    
     //renders data from localstorage
     renderLine();
     getProjects(); 
@@ -146,7 +146,7 @@ function dataCollector(){
     } else {
         id = JSON.parse(localStorage.getItem('projects')).length;
     };
-
+    
     // create project object
     project = {
         name : nameInput.value,
@@ -154,7 +154,7 @@ function dataCollector(){
         date : date,
         id : id
     }
-
+    
     return project;    
 };
 
@@ -162,8 +162,16 @@ function dataCollector(){
 function renderLine(){    
     let tableline = document.getElementById('table-line').innerHTML = "";
     let projects = localStorage.getItem('projects');
-    let projectsArr = JSON.parse(projects);
+    let projectsArr; 
 
+    if(projects === null){
+        projectsArr = [];
+    } else {        
+        projectsArr = JSON.parse(projects);
+    }
+
+    // console.log(projectsArr);
+    
     for(project of projectsArr){
         tableline = document.getElementById('table-line');
         // creating element for the new line
@@ -180,20 +188,20 @@ function renderLine(){
         <span>${project.name}</span>  
         </div>
         <div class="project-total d-flex justify-content-between align-items-center">
-            <span class="totalSpan"> Total: </span>
-            <span class="valueSpan" id="valueSpan-${project.id}">${project.total}</span>
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${project.id})" class="button m-1">
-                <rect width="30" height="30" fill="#E5E5E5"/>
-                <rect width="30" height="30" fill="#006400"/>
-            <path d="M24 15L9 23.6603L9 6.33975L24 15Z" fill="white"/>
-            </svg>
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${project.id});" class="button m-1">
-                <rect width="30" height="30" fill="#D90909"/>
-                <rect x="7" y="7" width="16" height="16" fill="white"/>
-            </svg>
+        <span class="totalSpan"> Total: </span>
+        <span class="valueSpan" id="valueSpan-${project.id}">${project.total}</span>
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="startCount(${project.id})" class="button m-1">
+        <rect width="30" height="30" fill="#E5E5E5"/>
+        <rect width="30" height="30" fill="#006400"/>
+        <path d="M24 15L9 23.6603L9 6.33975L24 15Z" fill="white"/>
+        </svg>
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" onClick="stopCount(${project.id});" class="button m-1">
+        <rect width="30" height="30" fill="#D90909"/>
+        <rect x="7" y="7" width="16" height="16" fill="white"/>
+        </svg>
         </div>`;    
-        }        
-    }; 
+    }        
+}; 
 
 // start local counter
 
@@ -257,15 +265,15 @@ function stopCount(id){
     // ez a stoppgomb kiveszi az adatot a storagebol updateli az uj ertekkel es visszateszi es hivja a renderlinet   
     let newCount = document.getElementById(`valueSpan-${id}`).innerHTML;
     let projects = JSON.parse(localStorage.getItem('projects'));
-
+    
     projects[id].total = newCount;
-
+    
     // this the data that we just modified
     console.log(projects[id]);
-
+    
     // saves updated data to localstorage
     localStorage.setItem('projects', JSON.stringify(projects));
-
+    
     //renders the lines on the tracker state
     renderLine();
     //renders the lines on the project state
@@ -298,25 +306,34 @@ function getProjects(){
     //clears project-table`s html
     let projectTable = document.getElementById('project-table').innerHTML = "";
     // gets data from localstorage
-    let projects = JSON.parse(localStorage.getItem('projects'));
+    let projects = localStorage.getItem('projects');
+    let projectsArr;
+
+    if(projects === null){
+        projectsArr = [];
+    } else {
+        projectsArr = JSON.parse(projects);
+    }
+
+    console.log(projects);
 
     projectTable = document.getElementById('project-table');  
     
     //creates html elementfor each project in the projects array
-    for(project of projects){
+    for(project of projectsArr){
         lineDiv = document.createElement('div');
         lineDiv.innerHTML = `
         <span class="line-title-span">${project.name}</span>
         <div class="d-flex align-center">    
-            <span class="line-count-span">${project.total}</span>
-            <div id="deleteButton-${project.id}">
-                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="button m-1" onClick='deleteLine(${project.id})'>
-                    <rect width="30" height="30" fill="#E5E5E5"/>
-                    <rect width="30" height="30" fill="#000"/>
-                    <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
-                    <rect x="5" y="22.6777" width="25" height="3" transform="rotate(-45 5 22.6777)" fill="white"/>
-                </svg>
-            </div>
+        <span class="line-count-span">${project.total}</span>
+        <div id="deleteButton-${project.id}">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" class="button m-1" onClick='deleteLine(${project.id})'>
+        <rect width="30" height="30" fill="#E5E5E5"/>
+        <rect width="30" height="30" fill="#000"/>
+        <rect x="22.6777" y="24.799" width="25" height="3" transform="rotate(-135 22.6777 24.799)" fill="white"/>
+        <rect x="5" y="22.6777" width="25" height="3" transform="rotate(-45 5 22.6777)" fill="white"/>
+        </svg>
+        </div>
         </div>`;
         // adds classes to created lines
         lineDiv.classList.add('d-flex','justify-content-between','line-div');
@@ -385,5 +402,6 @@ function showDeleteAlert(){
 function hideDeleteAlert(){
     document.getElementById('delete-alert').style.display = 'none';   
 }
+
 
 
